@@ -4,12 +4,13 @@
 ##           LOAD LIBRARIES              ##
 ###########################################
 "
-library(dplyr)
-library (ggplot2)
-library(gridExtra)
-library(tidyverse)
-library(paletteer)
-library(eulerr)
+# R version 4.3.3 (2024-02-29 ucrt)
+library(dplyr) # version: 1.1.4 
+library (ggplot2) # version: 3.5.0  
+library(gridExtra) # version: 2.3
+library(tidyverse) # version: 2.0.0 
+library(paletteer) # version: 1.6.0 
+library(eulerr) # version: 7.0.1 
 
 
 "
