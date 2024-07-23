@@ -187,46 +187,57 @@ As species richness is a count data, we assumed a Poisson distribution and a log
 ##############################
 
 ## Lotic species
-
+m.eu.lot <- glm(R_Lotic  ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) ,family=poisson, data=da)
 m.nor.lot <- glm(R_Lotic  ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) ,family=poisson, data=nor)
 m.sur.lot <- glm(R_Lotic  ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot)  ,family=poisson, data=sur)
 
+summary(m.eu.lot)
 summary(m.nor.lot)
 summary(m.sur.lot)
 
 ### R2
+1 - summary(m.eu.lot)$deviance/summary(m.eu.lot)$null.deviance
 1 - summary(m.nor.lot)$deviance/summary(m.nor.lot)$null.deviance
 1 - summary(m.sur.lot)$deviance/summary(m.sur.lot)$null.deviance
 
 ## Lentic species
+m.eu.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lent) ,family=poisson, data=da)
 m.nor.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lent) ,family=poisson, data=nor)
 m.sur.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lent) ,family=poisson, data=sur)
 
+summary(m.eu.len)
 summary(m.nor.len)
 summary(m.sur.len)
 
 ### R2
+1 - summary(m.eu.len)$deviance/summary(m.eu.len)$null.deviance
 1 - summary(m.nor.len)$deviance/summary(m.nor.len)$null.deviance
 1 - summary(m.sur.len)$deviance/summary(m.sur.len)$null.deviance
 
 
 ## Odonata
+m.eu.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=da)
 m.nor.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=nor)
 m.sur.all<- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=sur)
 
+summary(m.eu.all)
 summary(m.nor.all)
 summary(m.sur.all)
 
 ### R2
+1 - summary(m.eu.all)$deviance/summary(m.eu.all)$null.deviance
 1 - summary(m.nor.all)$deviance/summary(m.nor.all)$null.deviance
 1 - summary(m.sur.all)$deviance/summary(m.sur.all)$null.deviance
 
 
 ### Plots
+plot(m.eu.lot)
 plot(m.nor.lot)
 plot(m.sur.lot)
+plot(m.eu.len)
 plot(m.nor.len)
 plot(m.nor.len)
+plot(m.eu.all)
 plot(m.nor.all)
 plot(m.nor.all)
 
@@ -368,59 +379,62 @@ devianza
 ## Venn diagrams
 
 ###  Odonata.all
-plot.venn <- euler(c(Climate_Anomaly= 16.59,
-                     Current_Climate= 3.01,
-                     Habitat_Amount= 4.20,
-                     "Climate_Anomaly&Current_Climate"=7.95,
-                     "Climate_Anomaly&Habitat_Amount"= 3.37,
-                     "Current_Climate&Habitat_Amount"= 0.33, #negativo
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 3.92))
-
+plot.venn <- euler(c(Past_Climate= 16.59,
+                      Current_Climate= 3.01,
+                      Habitat_Availabilit= 4.20,
+                     "Past_Climate&Current_Climate"=7.95,
+                      "Past_Climate&Habitat_Availabilit"= 3.37,
+                      "Current_Climate&Habitat_Availabilit"= 0.33, #negativo
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 3.92))
 plot(plot.venn,
-     quantities = list(type = "counts"))
-
-plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
-
-
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ###  Odonata.South
-plot.venn <- euler(c(Climate_Anomaly= 9.75,
-                     Current_Climate= 15.34,
-                     Habitat_Amount= 0.62,
-                     "Climate_Anomaly&Current_Climate"=6.21,
-                     "Climate_Anomaly&Habitat_Amount"= 2.26,
-                     "Current_Climate&Habitat_Amount"= 1.13,
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 0.02)) #negativo
+plot.venn <- euler(c(Past_Climate= 9.75,
+                      Current_Climate= 15.34,
+                      Habitat_Availabilit= 0.62,
+                     "Past_Climate&Current_Climate"=6.21,
+                      "Past_Climate&Habitat_Availabilit"= 2.26,
+                      "Current_Climate&Habitat_Availabilit"= 1.13,
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 0.02)) #negativo
+
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ###  Odonata.North
-plot.venn <- euler(c(Climate_Anomaly= 11.24,
-                     Current_Climate= 7.73,
-                     Habitat_Amount= 2.37,
-                     "Climate_Anomaly&Current_Climate"=32.28,
-                     "Climate_Anomaly&Habitat_Amount"= 2.44,
-                     "Current_Climate&Habitat_Amount"= 0.77, #negativo
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 8.33))
-plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+plot.venn <- euler(c(Past_Climate= 11.24,
+                      Current_Climate= 7.73,
+                      Habitat_Availabilit= 2.37,
+                     "Past_Climate&Current_Climate"=32.28,
+                      "Past_Climate&Habitat_Availabilit"= 2.44,
+                      "Current_Climate&Habitat_Availabilit"= 0.77, #negativo
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 8.33))
 
+plot(plot.venn,
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ###  Odonata.North
-plot.venn <- euler(c(Climate_Anomaly= 11.24,
-                     Current_Climate= 7.73,
-                     Habitat_Amount= 2.37,
-                     "Climate_Anomaly&Current_Climate"=32.28,
-                     "Climate_Anomaly&Habitat_Amount"= 2.44,
-                     "Current_Climate&Habitat_Amount"= 0.77, #negativo
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 8.33))
+plot.venn <- euler(c(Past_Climate= 5.82,
+                      Current_Climate= 2.44,
+                      Habitat_Availabilit= 4.99,
+                     "Past_Climate&Current_Climate"=25.21,
+                      "Past_Climate&Habitat_Availabilit"= 1.41,
+                      "Current_Climate&Habitat_Availabilit"= 0.55, #negative
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 6.14))
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 
 ###  Lotic.all
@@ -432,67 +446,78 @@ plot.venn <- euler(c(Climate_Anomaly= 5.82,
                      "Current_Climate&Habitat_Amount"= 0.55, #negativo
                      "Current_Climate&Habitat_Amount&Climate_Anomaly" = 6.14))
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
-
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ### Lotic.South
-plot.venn <- euler(c(Climate_Anomaly= 6.97,
-                     Current_Climate= 14.24,
-                     Habitat_Amount= 2.39,
-                     "Climate_Anomaly&Current_Climate"=3.05,#negativo
-                     "Climate_Anomaly&Habitat_Amount"= 1.5,
-                     "Current_Climate&Habitat_Amount"= 3.48, 
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 0.03))#negativo
+plot.venn <- euler(c(Past_Climate= 6.97,
+                      Current_Climate= 14.24,
+                      Habitat_Availabilit= 2.39,
+                     "Past_Climate&Current_Climate"=3.05,#negative
+                      "Past_Climate&Habitat_Availabilit"= 1.5,
+                      "Current_Climate&Habitat_Availabilit"= 3.48, 
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 0.03))#negative
 
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ###  Lotic.North
-plot.venn <- euler(c(Climate_Anomaly= 9.04,
-                     Current_Climate= 3.9,
-                     Habitat_Amount= 5.74,
-                     "Climate_Anomaly&Current_Climate"=22.72,
-                     "Climate_Anomaly&Habitat_Amount"= 3.18,
-                     "Current_Climate&Habitat_Amount"= 0.65, 
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 4.45))
+plot.venn <- euler(c(Past_Climate= 9.04,
+                      Current_Climate= 3.9,
+                      Habitat_Availabilit= 5.74,
+                     "Past_Climate&Current_Climate"=22.72,
+                      "Past_Climate&Habitat_Availabilit"= 3.18,
+                      "Current_Climate&Habitat_Availabilit"= 0.65, 
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 4.45))
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ###  Lentic.all
-plot.venn <- euler(c(Climate_Anomaly= 20.43,
-                     Current_Climate= 3.97,
-                     Habitat_Amount= 3.21,
-                     "Climate_Anomaly&Current_Climate"=1.94,
-                     "Climate_Anomaly&Habitat_Amount"= 3.29,
-                     "Current_Climate&Habitat_Amount"= 0.22,  #negativo
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 2.7))
+plot.venn <- euler(c(Past_Climate= 20.43,
+                      Current_Climate= 3.97,
+                      Habitat_Availabilit= 3.21,
+                     "Past_Climate&Current_Climate"=1.94,
+                      "Past_Climate&Habitat_Availabilit"= 3.29,
+                      "Current_Climate&Habitat_Availabilit"= 0.22,  #negative
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 2.7))
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ### Lentic.South
-plot.venn <- euler(c(Climate_Anomaly= 14.18,
-                     Current_Climate= 18.75,
-                     Habitat_Amount= 0.07,
-                     "Climate_Anomaly&Current_Climate"=8.51,
-                     "Climate_Anomaly&Habitat_Amount"= 1.69,
-                     "Current_Climate&Habitat_Amount"= 1.32,
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 1.06))
+plot.venn <- euler(c(Past_Climate= 14.18,
+                      Current_Climate= 18.75,
+                      Habitat_Availabilit= 0.07,
+                     "Past_Climate&Current_Climate"=8.51,
+                      "Past_Climate&Habitat_Availabilit"= 1.69,
+                      "Current_Climate&Habitat_Availabilit"= 1.32,
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 1.06))
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
 
 ### Lentic.North
-plot.venn <- euler(c(Climate_Anomaly= 11.17,
-                     Current_Climate= 8.24,
-                     Habitat_Amount= 1.82,
-                     "Climate_Anomaly&Current_Climate"=32.78,
-                     "Climate_Anomaly&Habitat_Amount"= 2.17,
-                     "Current_Climate&Habitat_Amount"= 0.75,  #negativo
-                     "Current_Climate&Habitat_Amount&Climate_Anomaly" = 8.72))
+plot.venn <- euler(c(Past_Climate= 11.17,
+                      Current_Climate= 8.24,
+                      Habitat_Availabilit= 1.82,
+                     "Past_Climate&Current_Climate"=32.78,
+                      "Past_Climate&Habitat_Availabilit"= 2.17,
+                      "Current_Climate&Habitat_Availabilit"= 0.75,  #negative
+                      "Current_Climate&Habitat_Availabilit&Past_Climate" = 8.72))
 plot(plot.venn,
-     quantities = list(type = "counts"),
-     legend = list(side = "right"))
+     quantities = list(type = "counts", fontsize = 18),
+     labels = FALSE,
+     legend = list(labels = c("Past Climate", "Current Climate", "Habitat availability"),
+       side = "right"))
