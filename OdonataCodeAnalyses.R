@@ -49,13 +49,13 @@ In this dataset, each variable corresponds to:
 
 - id.group: study group
 - id.reg: region of Europe
-- pure.pas.r2: Climate_Anomaly
-- pure.pre.r2:  Climate_Anomaly
-- pure.hab.r2: Habitat_Amount
-- over.pas.pre1: Climate_Anomaly&Current_Climate
-- over.pas.hab: Current_Climate&Habitat_Amount
-- over.pre.hab1: Current_Climate&Habitat_Amount
-- over.tot: Current_Climate&Habitat_Amount&Climate_Anomaly
+- pure.pas.r2: Past_Climate
+- pure.pre.r2: Current_Climate
+- pure.hab.r2: Habitat_Availabilit
+- over.pas.pre1: Past_Climate&Current_Climate
+- over.pas.hab: Past_Climate&Habitat_Availabilit
+- over.pre.hab1: Current_Climate&Habitat_Availabilit
+- over.tot: Current_Climate&Habitat_Availabilit&Past_Climate
 
 "
 
