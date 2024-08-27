@@ -12,7 +12,6 @@ library(tidyverse) # version: 2.0.0
 library(paletteer) # version: 1.6.0 
 library(eulerr) # version: 7.0.1 
 
-
 "
 ###########################################
 ##             LOAD DATA                 ##
@@ -62,7 +61,6 @@ In this dataset, each variable corresponds to:
 da = read.csv('Data/df_odonata.csv', sep = ';')
 devianza = read.csv('Data/table_devianza.csv', sep = ';')
 
-
 "
 ###################################################################
 ##     Dividing study area in Northern and Southern Europe       ##
@@ -71,13 +69,10 @@ devianza = read.csv('Data/table_devianza.csv', sep = ';')
 
 nor <- da[da$Temp_21<0,]
 sur <- da[da$Temp_21>0,]
-
 ## Summary for each region
-
 ### Northern Europe
 summary_nor<-summary(nor)
 summary_nor
-
 ### Southern Europe
 summary_sur<-summary(sur)
 summary_sur
@@ -171,8 +166,6 @@ wilcox.test (stacked_data$R_Odonata ~ stacked_data$Zone)
 wilcox.test (stacked_data$R_Lotic  ~ stacked_data$Zone)
 wilcox.test (stacked_data$R_Lentic ~ stacked_data$Zone)
 
-
-
 "
 ##############################################################################################
 ##   Relationships between richness, climate, climate stability, and habitat availability   ##
@@ -214,7 +207,6 @@ summary(m.sur.len)
 1 - summary(m.nor.len)$deviance/summary(m.nor.len)$null.deviance
 1 - summary(m.sur.len)$deviance/summary(m.sur.len)$null.deviance
 
-
 ## Odonata
 m.eu.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=da)
 m.nor.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=nor)
@@ -229,7 +221,6 @@ summary(m.sur.all)
 1 - summary(m.nor.all)$deviance/summary(m.nor.all)$null.deviance
 1 - summary(m.sur.all)$deviance/summary(m.sur.all)$null.deviance
 
-
 ### Plots
 plot(m.eu.lot)
 plot(m.nor.lot)
@@ -240,7 +231,6 @@ plot(m.nor.len)
 plot(m.eu.all)
 plot(m.nor.all)
 plot(m.nor.all)
-
 
 ### Scatter plots of supplementary materials
 
@@ -266,9 +256,7 @@ ggplot(Odonata_plot_nor_long) +
         axis.text.x = element_text(angle = 45, hjust = 1))+
   labs(title = "Scatter plots for Odonates in northern Europe")
 
-
 #### Odonata Southern Europe
-
 Odonata_plot_sur = sur %>%
   select(ET_ID, ET_Index, R_Odonata, vart, varp, Temp_0, Prec_0, H_Lent, H_Lot)
 
@@ -276,7 +264,6 @@ Odonata_plot_sur_long <- Odonata_plot_sur %>%
   gather(key = study_variable , value = value, vart:H_Lot, factor_key = TRUE)
 
 str(Odonata_plot_sur_long)
-
 
 my_colors <- paletteer_c("grDevices::Temps", 6) #color palette
 
@@ -289,7 +276,6 @@ ggplot(Odonata_plot_sur_long) +
         axis.text.x = element_text(angle = 45, hjust = 1))+
   labs(title = "Scatter plots for Odonates in southern Europe")
 
-
 #### Lotic species in northern Europe
 Lotic_plot_nor = nor %>%
   select(ET_ID, ET_Index, R_Lotic , vart, varp, Temp_0, Prec_0, H_Lot)
@@ -298,7 +284,6 @@ Lotic_plot_nor_long <- Lotic_plot_nor %>%
   gather(key = study_variable , value = value, vart:H_Lot, factor_key = TRUE)
 
 str(Lotic_plot_nor_long)
-
 
 my_colors <- paletteer_c("grDevices::Temps", 5) #color palette
 
@@ -312,7 +297,6 @@ ggplot(Lotic_plot_nor_long) +
   labs(title = "Scatter plots for Lotic species in northern Europe")
 
 #### Lotic species in southern Europe
-
 Lotic_plot_sur = sur %>%
   select(ET_ID, ET_Index, R_Lotic , vart, varp, Temp_0, Prec_0, H_Lot)
 
@@ -330,9 +314,7 @@ ggplot(Lotic_plot_sur_long) +
         axis.text.x = element_text(angle = 45, hjust = 1))+
   labs(title = "Scatter plots for Lotic species in southern Europe")
 
-
 #### Lentic species in northern Europe
-
 Lentic_plot_nor = nor %>%
   select(ET_ID, ET_Index, R_Lentic, vart, varp, Temp_0, Prec_0, H_Lent)
 
@@ -377,7 +359,6 @@ ggplot(Lentic_plot_sur_long) +
 devianza
 
 ## Venn diagrams
-
 ###  Odonata.all
 plot.venn <- euler(c(Past_Climate= 16.59,
                       Current_Climate= 3.01,
