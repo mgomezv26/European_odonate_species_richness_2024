@@ -7,7 +7,7 @@ library(viridis)
 library(patchwork)
 
 # Load data
-grid <- st_read("Data/Grid_Richness.shp")
+grid <- st_read("Data/shp/Grid_Richness.shp")
 colnames(grid)
 
 # ETRS89-LAEA coordinate system (EPSG:3035)
