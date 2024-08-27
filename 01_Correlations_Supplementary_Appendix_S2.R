@@ -3,14 +3,12 @@
 This file contains the code used to perform the Supplementary Appendix S2 correlations.
 "
 
-
 # Load library
 library(sf)
 
 # Load data
 grid <- st_read("Data/Grid_Richness.shp")
 colnames(grid)
-
 
 # Anisoptera lentic – Zygoptera lentic 
 Lentic.cortest <- cor.test(
@@ -20,7 +18,6 @@ Lentic.cortest <- cor.test(
 )
 print(Lentic.cortest) #0.8102116 
 
-
 # Anisoptera lotic – Zygoptera lotic 
 Lotic.cortest <- cor.test(
   as.numeric(as.character(grid$R_Ani_Lot)),
@@ -28,7 +25,6 @@ Lotic.cortest <- cor.test(
   method = "spearman"
 )
 print(Lotic.cortest) #0.7487992
-
 
 # Zygoptera lentic – Zygoptera lotic 
 Zygop.Lentic.Lotic.cortest <- cor.test(
@@ -38,7 +34,6 @@ Zygop.Lentic.Lotic.cortest <- cor.test(
 )
 print(Zygop.Lentic.Lotic.cortest) #0.6118159 
 
-
 # Anisoptera lentic – Anisoptera lotic 
 Ani.Lentic.Lotic.cortest <- cor.test(
   as.numeric(as.character(grid$R_Ani_Len)),
@@ -46,8 +41,6 @@ Ani.Lentic.Lotic.cortest <- cor.test(
   method = "spearman"
 )
 print(Ani.Lentic.Lotic.cortest) #0.5000127  
-
-
 
 # Configure the figure with 2 columns and 2 rows.
 par(mfrow = c(2, 2))
