@@ -1,12 +1,18 @@
 # The following script describe how to create the maps of the paper
 
-# Load library  ---------------------------------------------------------
+###########################################
+##           LOAD LIBRARIES              ##
+###########################################
+
 library(ggplot2) # version: 3.5.0 
 library(sf) # version: 1.0.16 
 library(viridis) # version: 0.6.5 
 library(patchwork) # version: 0.6.5  
 
-# Load data  ---------------------------------------------------------
+###########################################
+##             LOAD DATA                 ##
+###########################################
+
 grid <- st_read("Data/shp/Grid_Richness.shp")
 #colnames(grid)
 # ETRS89-LAEA coordinate system (EPSG:3035) 
@@ -44,7 +50,10 @@ combined_map <- (map_od | map_lentic | map_lotic)
 # Show the combined figure
 print(combined_map)
 
-# Figure 1. Map of the study area. ---------------------------------------------------------
+###################################################
+##           MAP OF THE STUDY AREA               ##
+###################################################
+# Figure 1. Map of the study area. 
 
 labels <- c("Southern ", "Northern ")
 grid$Zone = as.factor(grid$Zone)
@@ -58,7 +67,9 @@ map_zone <- ggplot(data = grid) +
 # Show
 map_zone
 
-# Supplementary Figure S2.2. ---------------------------------------------------------
+###################################################
+##           SUPPLEMENTARY FIGURE S2.2           ##
+###################################################
 
 # Create a map for Anisoptera
 map_ani <- ggplot(data = grid) +
