@@ -18,54 +18,92 @@ grid <- st_read("Data/shp/Grid_Richness.shp")
 # ETRS89-LAEA coordinate system (EPSG:3035) 
 grid <- st_transform(grid, crs = 3035)
 
-# Create a map for Odonata
+###################################################
+##           MAP OF THE STUDY AREA               ##
+###################################################
+
+# Figure 1. Map of the study area. 
+labels <- c("Southern ", "Northern ")
+grid$Zone = as.factor(grid$Zone)
+
+map_zone <- ggplot(data = grid) +
+  geom_sf(aes(fill = Zone)) +
+  scale_fill_manual(values = c("#E0EEEE", "#49A4B9"), labels = labels) +
+  labs(title = "Study area", x = "Longitud", y = "Latitud") +
+  theme_bw() +
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 20, face = "bold"),  
+    axis.title = element_text(size = 18),                
+    axis.text = element_text(size = 16),                 
+    legend.title = element_text(size = 14),              
+    legend.text = element_text(size = 12)               
+  )
+
+# Show
+map_zone
+# Save the figure as a PNG file with a resolution of 600 ppi.
+ggsave("Figure_1.png", plot = map_zone, width = 10, height = 15, units = "in", dpi = 600)
+
+
+###################################################
+##             SPECIES RICHNESS MAP              ##
+###################################################
+
+# Figure 2. Species richness map.
+## Create a map for Odonata
 map_od <- ggplot(data = grid) +
   geom_sf(aes(fill = R_Odonata), color = NA) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Odonata", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right")
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 30),  
+    axis.title = element_text(size = 24),                
+    axis.text = element_text(size = 18),                 
+    legend.title = element_text(size = 20),              
+    legend.text = element_text(size = 18)               
+  )
 
-# Create a map for Lentic
+## Create a map for Lentic
 map_lentic <- ggplot(data = grid) +
   geom_sf(aes(fill = R_Lentic), color = NA) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Lentic", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right") #hide axes with element_blank()
-  #theme(legend.position = "right", axis.title.x = element_blank(), axis.title.y = element_blank()) #hide axes with element_blank()
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 30),  
+    axis.title = element_text(size = 24),                
+    axis.text = element_text(size = 18),                 
+    legend.title = element_text(size = 20),              
+    legend.text = element_text(size = 18)               
+  )
 
-# Create a map for Lotic
+## Create a map for Lotic
 map_lotic <- ggplot(data = grid) +
   geom_sf(aes(fill = R_Lotic), color = NA) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Lotic", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right") #hide axes with element_blank()
-  #theme(legend.position = "right", axis.title.x = element_blank(), axis.title.y = element_blank()) #hide axes with element_blank()
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 30),  
+    axis.title = element_text(size = 24),                
+    axis.text = element_text(size = 18),                 
+    legend.title = element_text(size = 20),              
+    legend.text = element_text(size = 18)               
+  )
 
 # Combine the three maps into a single figure
 combined_map <- (map_od | map_lentic | map_lotic)
-
 # Show the combined figure
 print(combined_map)
 
-###################################################
-##           MAP OF THE STUDY AREA               ##
-###################################################
-# Figure 1. Map of the study area. 
+# Save the figure as a PNG file with a resolution of 600 ppi.
+ggsave("Figure_2.png", plot = combined_map, width = 20, height = 25, units = "in", dpi = 600)
 
-labels <- c("Southern ", "Northern ")
-grid$Zone = as.factor(grid$Zone)
-map_zone <- ggplot(data = grid) +
-  geom_sf(aes(fill = Zone)) +
-  scale_fill_manual(values = c("#E0EEEE", "#49A4B9"), labels = labels) +
-  labs(title = "Study area", x = "Longitud", y = "Latitud") +
-  theme_minimal() +
-  theme(legend.position = "right")
-
-# Show
-map_zone
 
 ###################################################
 ##           SUPPLEMENTARY FIGURE S2.2           ##
