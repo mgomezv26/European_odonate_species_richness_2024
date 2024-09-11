@@ -77,7 +77,14 @@ map_ani <- ggplot(data = grid) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Anisoptera", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right")
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
+    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
+    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
+    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+  )
 
 # Create a map for Zygoptera
 map_zyg <- ggplot(data = grid) +
@@ -85,7 +92,14 @@ map_zyg <- ggplot(data = grid) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Zygoptera", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right", axis.title.x = element_blank(), axis.title.y = element_blank())
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
+    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
+    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
+    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+  )
 
 # Create a map for Anisoptera - Lentic
 map_ani_len <- ggplot(data = grid) +
@@ -93,7 +107,14 @@ map_ani_len <- ggplot(data = grid) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Anisoptera Lentic", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right")
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
+    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
+    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
+    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+  )
 
 # Create a map for Anisoptera - Lotic
 map_ani_lot <- ggplot(data = grid) +
@@ -101,7 +122,14 @@ map_ani_lot <- ggplot(data = grid) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Anisoptera Lotic", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right", axis.title.x = element_blank(), axis.title.y = element_blank()) #hide axes with element_blank()
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
+    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
+    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
+    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+  )
 
 # Create a map for Zygoptera - Lentic
 map_zyg_len <- ggplot(data = grid) +
@@ -109,7 +137,14 @@ map_zyg_len <- ggplot(data = grid) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Zygoptera Lentic", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right")
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
+    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
+    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
+    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+  )
 
 # Create a map for Zygoptera - Lotic
 map_zyg_lot <- ggplot(data = grid) +
@@ -117,7 +152,14 @@ map_zyg_lot <- ggplot(data = grid) +
   scale_fill_viridis(name = "Richness", option = "viridis") +
   labs(title = "Zygoptera Lotic", x = "Longitud", y = "Latitud") +
   theme_minimal() +
-  theme(legend.position = "right", axis.title.x = element_blank(), axis.title.y = element_blank()) #hide axes with element_blank()
+  theme(
+    legend.position = "right",
+    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
+    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
+    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
+    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
+    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+  )
 
 # Combine the three maps into a single figure
 combined_map <- (map_ani | map_zyg) /
@@ -126,4 +168,7 @@ combined_map <- (map_ani | map_zyg) /
 
 # Show the combined figure
 print(combined_map)
+
+# Save the figure as a PNG file with a resolution of 600 ppi.
+ggsave("Figure_S2_2.png", plot = combined_map, width = 10, height = 15, units = "in", dpi = 600)
 
