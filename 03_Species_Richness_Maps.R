@@ -79,11 +79,11 @@ map_ani <- ggplot(data = grid) +
   theme_minimal() +
   theme(
     legend.position = "right",
-    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
-    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
-    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
-    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
-    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+    plot.title = element_text(size = 20, face = "bold"),  
+    axis.title = element_text(size = 18),                
+    axis.text = element_text(size = 16),                 
+    legend.title = element_text(size = 14),              
+    legend.text = element_text(size = 12)               
   )
 
 # Create a map for Zygoptera
@@ -94,11 +94,11 @@ map_zyg <- ggplot(data = grid) +
   theme_minimal() +
   theme(
     legend.position = "right",
-    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
-    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
-    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
-    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
-    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+    plot.title = element_text(size = 20, face = "bold"),  
+    axis.title = element_text(size = 18),                
+    axis.text = element_text(size = 16),                 
+    legend.title = element_text(size = 14),              
+    legend.text = element_text(size = 12)               
   )
 
 # Create a map for Anisoptera - Lentic
@@ -109,11 +109,11 @@ map_ani_len <- ggplot(data = grid) +
   theme_minimal() +
   theme(
     legend.position = "right",
-    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
-    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
-    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
-    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
-    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+    plot.title = element_text(size = 20, face = "bold"),  
+    axis.title = element_text(size = 18),                
+    axis.text = element_text(size = 16),                 
+    legend.title = element_text(size = 14),              
+    legend.text = element_text(size = 12)               
   )
 
 # Create a map for Anisoptera - Lotic
@@ -124,11 +124,11 @@ map_ani_lot <- ggplot(data = grid) +
   theme_minimal() +
   theme(
     legend.position = "right",
-    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
-    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
-    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
-    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
-    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+    plot.title = element_text(size = 20, face = "bold"),  
+    axis.title = element_text(size = 18),                
+    axis.text = element_text(size = 16),                 
+    legend.title = element_text(size = 14),              
+    legend.text = element_text(size = 12)               
   )
 
 # Create a map for Zygoptera - Lentic
@@ -139,11 +139,11 @@ map_zyg_len <- ggplot(data = grid) +
   theme_minimal() +
   theme(
     legend.position = "right",
-    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
-    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
-    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
-    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
-    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+    plot.title = element_text(size = 20, face = "bold"),  
+    axis.title = element_text(size = 18),                
+    axis.text = element_text(size = 16),                 
+    legend.title = element_text(size = 14),              
+    legend.text = element_text(size = 12)               
   )
 
 # Create a map for Zygoptera - Lotic
@@ -154,11 +154,11 @@ map_zyg_lot <- ggplot(data = grid) +
   theme_minimal() +
   theme(
     legend.position = "right",
-    plot.title = element_text(size = 20, face = "bold"),  # Tamaño del título del mapa
-    axis.title = element_text(size = 18),                # Tamaño de los nombres de los ejes
-    axis.text = element_text(size = 16),                 # Tamaño de las etiquetas de los ejes
-    legend.title = element_text(size = 14),              # Tamaño del título de la leyenda
-    legend.text = element_text(size = 12)                # Tamaño del texto de la leyenda
+    plot.title = element_text(size = 20, face = "bold"),  
+    axis.title = element_text(size = 18),                
+    axis.text = element_text(size = 16),                 
+    legend.title = element_text(size = 14),              
+    legend.text = element_text(size = 12)               
   )
 
 # Combine the three maps into a single figure
