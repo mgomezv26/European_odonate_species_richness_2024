@@ -287,10 +287,10 @@ plot(m.eu.all)
 plot(m.nor.all)
 plot(m.nor.all)
 
+########################################################################
+###           Scatter plots of supplementary materials               ###
+########################################################################
 
-### Scatter plots of supplementary materials
-
-########################################
 #### Odonata northern Europe
 Odonata_plot_nor = nor %>%
   select(ET_ID, ET_Index, R_Odonata, vart, varp, Temp_0, Prec_0, H_Lent, H_Lot)
@@ -312,7 +312,6 @@ SCplot_N <- ggplot(Odonata_plot_nor_long) +
         axis.text.x = element_text(angle = 45, hjust = 1))+
   labs(title = "Scatter plots for Odonates in northern Europe")
 
-
 #### Odonata Southern Europe
 Odonata_plot_sur = sur %>%
   select(ET_ID, ET_Index, R_Odonata, vart, varp, Temp_0, Prec_0, H_Lent, H_Lot)
@@ -332,7 +331,6 @@ SCplot_S <- ggplot(Odonata_plot_sur_long) +
   theme(panel.background = element_rect(fill = "white"),
         axis.text.x = element_text(angle = 45, hjust = 1))+
   labs(title = "Scatter plots for Odonates in southern Europe")
-
 
 # Combine the three maps into a single figure
 combined_plot <- (SCplot_N | SCplot_S)
