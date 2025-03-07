@@ -6,7 +6,6 @@
 R version 4.3.3 (2024-02-29 ucrt)
 "
 
-
 library(dplyr)
 library (ggplot2)
 library(gridExtra)
@@ -16,16 +15,30 @@ library(eulerr)
 library(cowplot)
 library(grid)
 library(patchwork) 
+library(vegan)
+library(fossil)
+library(letsR)
+library(ape)
+library(adespatial)
+library(sf)
+library(sp)
+
 
 cat("Versions of the libraries used:\n")
-cat("dplyr:", as.character(packageVersion("dplyr")), "\n")
-cat("ggplot2:", as.character(packageVersion("ggplot2")), "\n")
-cat("gridExtra:", as.character(packageVersion("gridExtra")), "\n")
-cat("tidyverse:", as.character(packageVersion("tidyverse")), "\n")
-cat("paletteer:", as.character(packageVersion("paletteer")), "\n")
-cat("eulerr:", as.character(packageVersion("eulerr")), "\n")
-cat("cowplot:", as.character(packageVersion("cowplot")), "\n")
-
+cat("dplyr:", as.character(packageVersion("dplyr")), "\n") # dplyr: 1.1.4 
+cat("ggplot2:", as.character(packageVersion("ggplot2")), "\n") # ggplot2: 3.5.1 
+cat("gridExtra:", as.character(packageVersion("gridExtra")), "\n") # gridExtra: 2.3 
+cat("tidyverse:", as.character(packageVersion("tidyverse")), "\n") # tidyverse: 2.0.0 
+cat("paletteer:", as.character(packageVersion("paletteer")), "\n") # paletteer: 1.6.0 
+cat("eulerr:", as.character(packageVersion("eulerr")), "\n") # eulerr: 7.0.2 
+cat("cowplot:", as.character(packageVersion("cowplot")), "\n") # cowplot: 1.1.3
+cat("vegan:", as.character(packageVersion("vegan")), "\n") # vegan: 2.6.10 
+cat("fossil:", as.character(packageVersion("fossil")), "\n") # fossil: 0.4.0 
+cat("letsR:", as.character(packageVersion("letsR")), "\n") # letsR: 5.0 
+cat("ape:", as.character(packageVersion("ape")), "\n") # ape: 5.8.1 
+cat("adespatial:", as.character(packageVersion("sf")), "\n") # adespatial: 1.0.19 
+cat("sf:", as.character(packageVersion("fossil")), "\n") # sf: 0.4.0 
+cat("sp:", as.character(packageVersion("sp")), "\n") # sp: 2.1.4
 
 
 "
@@ -82,12 +95,27 @@ In this dataset, each variable corresponds to:
 da = read.csv('Data/df_odonata.csv', sep = ';')
 devianza = read.csv('Data/table_devianza.csv', sep = ';')
 
+da <- read.csv('Data/df_odonata.csv', sep = ';')
+da$R_Odonata   <- as.numeric(gsub(",", ".", da$R_Odonata))
+da$R_Lentic   <- as.numeric(gsub(",", ".", da$R_Lentic))
+da$R_Lotic   <- as.numeric(gsub(",", ".", da$R_Lotic))
 
+da$Temp_21   <- as.numeric(gsub(",", ".", da$Temp_21))
+da$Prec_21   <- as.numeric(gsub(",", ".", da$Prec_21))
+da$BIO12_Prec <- as.numeric(gsub(",", ".", da$BIO12_Prec))
+da$Temp_0    <- as.numeric(gsub(",", ".", da$Temp_0))
+da$Prec_0    <- as.numeric(gsub(",", ".", da$Prec_0))
+da$vart      <- as.numeric(gsub(",", ".", da$vart))
+da$varp      <- as.numeric(gsub(",", ".", da$varp))
+da$H_Lent    <- as.numeric(gsub(",", ".", da$H_Lent))
+da$H_Lot     <- as.numeric(gsub(",", ".", da$H_Lot))
 
 "
 ###################################################################
 ##     Dividing study area in Northern and Southern Europe       ##
 ###################################################################
+
+To assess the effect of glaciations on richness, we divided the study area in Northern and Southern Europe, based on the 0 ºC isotherm at LGM.
 "
 
 nor <- da[da$Temp_21<0,]
@@ -227,65 +255,203 @@ wilcox.test (stacked_data$R_Lentic ~ stacked_data$Zone)
 ##############################################################################################
 
 We used Generalised Linear Models (GLMs) to explore the relationship between species richness, past and contemporary climate, and habitat availability. 
-As species richness is a count data, we assumed a Poisson distribution and a logarithmic joint function
+As species richness values represent count data (or similar), we assumed a Poisson distribution and a logarithmic link function.
+To assess whether the species richness determinants change from one region to another, we performed statistical models for (1) Northern Europe and (2) Southern Europe.
+
+Subsequently, the independent variables were standardized (scaled to 0 mean and 1 standard deviation) to allow comparison of their effects on species richness pattern. 
+To account for spatial autocorrelation, we included spatial filters derived from Principal Coordinates of Neighbourhood Matrices (PCNM)
 "
 
-##############################
-## GLM
-##############################
+#------------------------- # Northern Europe # ----------------------------------------------#
 
-## Lotic species
-m.eu.lot <- glm(R_Lotic  ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) ,family=poisson, data=da)
-m.nor.lot <- glm(R_Lotic  ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) ,family=poisson, data=nor)
-m.sur.lot <- glm(R_Lotic  ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot)  ,family=poisson, data=sur)
+##--------------------------------------------------------------------------------
+# Evaluate spatial correlation - Principal Coordinates of Neighbor Matrices (PCNM)
+##--------------------------------------------------------------------------------
 
-summary(m.eu.lot)
-summary(m.nor.lot)
-summary(m.sur.lot)
+## 1. Convert geographic to Cartesian coordinates
+xy <- as.matrix(nor[, c("longitude", "latitude")])
 
-### R2
-1 - summary(m.eu.lot)$deviance/summary(m.eu.lot)$null.deviance
-1 - summary(m.nor.lot)$deviance/summary(m.nor.lot)$null.deviance
-1 - summary(m.sur.lot)$deviance/summary(m.sur.lot)$null.deviance
+## 2. Calculate the spatial distance matrix
+d<-earth.dist(xy, dist=TRUE)
+d <- as.matrix(d)
+d[d==0] <- 0.0000001 # Avoid divisions by zero
+w <- 1/d # Matrix of spatial weights (inverse of distance)
+diag(w) <- 0 # Diagonal at zero (no autocorrelation with itself)
 
-## Lentic species
-m.eu.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lent) ,family=poisson, data=da)
-m.nor.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lent) ,family=poisson, data=nor)
-m.sur.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lent) ,family=poisson, data=sur)
+## 3. Calculate PCNM (Principal Coordinates of Neighbourhood Matrices)
+pcnm_result <- pcnm(d)
+eigen<-pcnm_result$vectors
+ncol(eigen)
 
-summary(m.eu.len)
-summary(m.nor.len)
-summary(m.sur.len)
+## 4. Evaluate the autocorrelation in residuals of linear models.
+selection <- function(z, d, eigen)
+{ n <-ncol(eigen) # number of eigenvectors
+  imor <- numeric(n)
+  for(i in 1:n){
+    print(n-i)
+    lm1 <- lm(z~eigen[, i]) # A linear model (lm1) is fitted between the response variable and each eigenvector of PCNM.
+    imor[i] <- lets.correl(lm1$residuals, d, 10, plot=F)[1,1] # Calculation of the Moran Index (lets.correl()), which measures the spatial autocorrelation in the residuals.
+  } 
+  posran <- numeric()
+  i=1
+  correlX <- lets.correl(lm1$residuals, d, 10)
+  p <- 0.04
+  rank1 <- rank(imor)
+  mud=0.2
+  while((correlX[1,4]<0.05 | p<0.05) & mud>=0.1){
+    print(i)
+    posran <- c(posran, which(rank1==i))
+    dat <- cbind(data.frame(Y=z),as.data.frame(eigen[, posran]))
+    lm2 <- lm(Y~., data=dat)
+    ant <- correlX[1,1]
+    correlX <- lets.correl(lm2$residuals, d, 10)
+    dep <- correlX[1,1]
+    mud <- (ant-dep)/ant
+    p <- Moran.I(lm2$residuals, w)
+    p <- p$p.value
+    i=i+1
+  }
+  return(posran)
+}
 
-### R2
-1 - summary(m.eu.len)$deviance/summary(m.eu.len)$null.deviance
-1 - summary(m.nor.len)$deviance/summary(m.nor.len)$null.deviance
-1 - summary(m.sur.len)$deviance/summary(m.sur.len)$null.deviance
+## 5. Select an optimal subset of spatial filters, minimising autocorrelation and perform the GLM
 
-## Odonata
-m.eu.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=da)
-m.nor.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=nor)
-m.sur.all<- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0)  + scale(Prec_0) + scale(H_Lot) + scale(H_Lent),family=poisson, data=sur)
+##----- Odonata species -----##
 
-summary(m.eu.all)
+z <- nor$R_Odonata # Variable response
+filters.1<- selection(z, d, eigen)
+filters <-eigen[ ,filters.1]
+nor$PCNM1 <- filters[,1]
+
+# GLM 
+m.nor.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0) + scale(Prec_0) + scale(H_Lot) + scale(H_Lent) +
+                           PCNM1, family = poisson, data = nor)
 summary(m.nor.all)
-summary(m.sur.all)
-
-### R2
-1 - summary(m.eu.all)$deviance/summary(m.eu.all)$null.deviance
 1 - summary(m.nor.all)$deviance/summary(m.nor.all)$null.deviance
+
+##----- Lentic species -----##
+z <- nor$R_Lentic # Variable response
+filters.1<- selection(z, d, eigen)
+filters <-eigen[ ,filters.1]
+nor$PCNM1 <- filters[,1]
+
+# GLM 
+m.nor.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0) + scale(Prec_0) + scale(H_Lent) +
+                           PCNM1, family = poisson, data = nor)
+summary(m.nor.len)
+1 - summary(m.nor.len)$deviance/summary(m.nor.len)$null.deviance
+
+
+##----- Lotic species -----##
+
+z <- nor$R_Lotic # Variable response
+filters.1<- selection(z, d, eigen)
+filters <-eigen[ ,filters.1]
+nor$PCNM1 <- filters[,1]
+
+# GLM 
+m.nor.lot <- glm(R_Lotic ~ scale(vart) + scale(varp) + scale(Temp_0) + scale(Prec_0) + scale(H_Lot) +
+                           PCNM1, family = poisson, data = nor)
+summary(m.nor.lot)
+1 - summary(m.nor.lot)$deviance/summary(m.nor.lot)$null.deviance
+
+
+
+#------------------------- # Southern Europe - LOTIC SPECIES  # ----------------------------------------------#
+
+##--------------------------------------------------------------------------------
+# Evaluate spatial correlation - Principal Coordinates of Neighbor Matrices (PCNM)
+##--------------------------------------------------------------------------------
+
+## 1. Convert geographic to Cartesian coordinates
+xy <- as.matrix(sur[, c("longitude", "latitude")])
+
+## 2. Calculate the spatial distance matrix
+d<-earth.dist(xy, dist=TRUE)
+d <- as.matrix(d)
+d[d==0] <- 0.0000001 # Avoid divisions by zero
+w <- 1/d # Matrix of spatial weights (inverse of distance)
+diag(w) <- 0 # Diagonal at zero (no autocorrelation with itself)
+
+## 3. Calculate PCNM (Principal Coordinates of Neighbourhood Matrices)
+pcnm_result <- pcnm(d)
+eigen<-pcnm_result$vectors
+ncol(eigen)
+
+## 4. Evaluate the autocorrelation in residuals of linear models.
+selection <- function(z, d, eigen)
+{ n <-ncol(eigen) # number of eigenvectors
+  imor <- numeric(n)
+  for(i in 1:n){
+    print(n-i)
+    lm1 <- lm(z~eigen[, i]) # A linear model (lm1) is fitted between the response variable and each eigenvector of PCNM.
+    imor[i] <- lets.correl(lm1$residuals, d, 10, plot=F)[1,1] # Calculation of the Moran Index (lets.correl()), which measures the spatial autocorrelation in the residuals.
+  } 
+  posran <- numeric()
+  i=1
+  correlX <- lets.correl(lm1$residuals, d, 10)
+  p <- 0.04
+  rank1 <- rank(imor)
+  mud=0.2
+  while((correlX[1,4]<0.05 | p<0.05) & mud>=0.1){
+    print(i)
+    posran <- c(posran, which(rank1==i))
+    dat <- cbind(data.frame(Y=z),as.data.frame(eigen[, posran]))
+    lm2 <- lm(Y~., data=dat)
+    ant <- correlX[1,1]
+    correlX <- lets.correl(lm2$residuals, d, 10)
+    dep <- correlX[1,1]
+    mud <- (ant-dep)/ant
+    p <- Moran.I(lm2$residuals, w)
+    p <- p$p.value
+    i=i+1
+  }
+  return(posran)
+}
+
+## 5. Select an optimal subset of spatial filters, minimising autocorrelation and perform the GLM
+
+##----- Odonata species -----##
+z <- sur$R_Odonata # Variable response
+filters.1<- selection(z, d, eigen)
+filters <- eigen[, filters.1, drop = FALSE]
+class(filters)
+str(filters)
+sur$PCNM1 <- filters[,1]
+
+# GLM 
+m.sur.all <- glm(R_Odonata ~ scale(vart) + scale(varp) + scale(Temp_0) + scale(Prec_0) + scale(H_Lot) + scale(H_Lent) +
+                           PCNM1, family = poisson, data = sur)
+summary(m.sur.all)
 1 - summary(m.sur.all)$deviance/summary(m.sur.all)$null.deviance
 
-### Plots
-plot(m.eu.lot)
-plot(m.nor.lot)
-plot(m.sur.lot)
-plot(m.eu.len)
-plot(m.nor.len)
-plot(m.nor.len)
-plot(m.eu.all)
-plot(m.nor.all)
-plot(m.nor.all)
+##----- Lentic species -----##
+
+z <- sur$R_Lentic # Variable response
+filters.1<- selection(z, d, eigen)
+filters <- eigen[, filters.1, drop = FALSE]
+sur$PCNM1 <- filters[,1]
+
+# GLM 
+m.sur.len <- glm(R_Lentic ~ scale(vart) + scale(varp) + scale(Temp_0) + scale(Prec_0) + scale(H_Lent) +
+                           PCNM1, family = poisson, data = sur)
+summary(m.sur.len)
+1 - summary(m.sur.len)$deviance/summary(m.sur.len)$null.deviance
+
+##----- Lotic species -----##
+z <- sur$R_Lotic # Variable response
+filters.1<- selection(z, d, eigen)
+filters <- eigen[, filters.1, drop = FALSE]
+sur$PCNM1 <- filters[,1]
+
+# GLM 
+m.sur.lot <- glm(R_Lotic ~ scale(vart) + scale(varp) + scale(Temp_0) + scale(Prec_0) + scale(H_Lot) +
+                           PCNM1, family = poisson, data = sur)
+summary(m.sur.lot)
+1 - summary(m.sur.lot)$deviance/summary(m.sur.lot)$null.deviance
+
+
+
 
 ########################################################################
 ###           Scatter plots of supplementary materials               ###
